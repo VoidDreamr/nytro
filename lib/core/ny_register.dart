@@ -6,18 +6,18 @@ class NyRegister {
 
   final Float32List buffer = Float32List(slotCount * laneCount);
 
-  int _index(int slot, int offset) {
+  int index(int slot, int offset) {
     return slot * laneCount + offset;
   }
 
   /// Gets the current value at `slot:offset`.
   double get(int slot, int offset) {
-    return buffer[_index(slot, offset)];
+    return buffer[index(slot, offset)];
   }
 
   /// Sets the current value at `slot:offset`.
   void set(int slot, int offset, double value) {
-    buffer[_index(slot, offset)] = value;
+    buffer[index(slot, offset)] = value;
   }
 
   void setRange(
@@ -28,8 +28,8 @@ class NyRegister {
     int count,
   ) {
     buffer.setRange(
-      _index(slot, offset),
-      _index(slot, offset) + count,
+      index(slot, offset),
+      index(slot, offset) + count,
       values,
       vOffset,
     );

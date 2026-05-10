@@ -33,23 +33,14 @@ class NyWriteInstr extends NyInstr {
       throw ArgumentError('Operands cannot be empty or have more than 17.');
     }
 
-    late final NyRegisterRef dest;
-    if (operands.last is NyRegisterRef) {
-      dest = operands.last as NyRegisterRef;
-    } else {
-      throw ArgumentError('The last operand must be a register reference.');
-    }
-
     final writeOperands = <NyFloatLike>[];
     for (int i = 0; i < operands.length - 1; i++) {
-      final op = operands[i];
-      if (op is NyFloatLike) {
-        writeOperands.add(op);
-      } else {
-        throw ArgumentError('Value operands must be floaty.');
-      }
+      writeOperands.add(NyInstr.expect<NyFloatLike>(operands[i], i));
     }
 
-    return NyWriteInstr(operands: writeOperands, dest: dest);
+    return NyWriteInstr(
+      operands: writeOperands,
+      dest: NyInstr.expect<NyRegisterRef>(operands.last, operands.length - 1),
+    );
   }
 }

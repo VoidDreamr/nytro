@@ -1,22 +1,30 @@
-import 'package:nytro/core/instructions/ny_load_inst.dart';
+import 'package:nytro/core/instructions/ny_load_instr.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
+import 'package:nytro/core/instructions/ny_store_instr.dart';
 import 'package:nytro/core/instructions/ny_write_instr.dart';
 import 'package:nytro/core/ny_program.dart';
 
 abstract class NyInstr {
   void execute(NyProgram program);
 
-  static void build(NyInstrCode code, List<NyOperand> operands) {}
+  static T expect<T>(NyOperand op, int argIndex) {
+    if (op is T) {
+      return op as T;
+    }
+    throw ArgumentError('Argument $argIndex should be a $T.');
+  }
 }
 
 enum NyInstrCode {
   write(mnemonic: 'WRITE'),
-  load(mnemonic: 'LOAD');
+  load(mnemonic: 'LOAD'),
+  store(mnemonic: 'STORE');
 
   static final Map<NyInstrCode, NyInstr Function(List<NyOperand>)> _factories =
       {
         NyInstrCode.write: NyWriteInstr.fromOperands,
         NyInstrCode.load: NyLoadInstr.fromOperands,
+        NyInstrCode.store: NyStoreInstr.fromOperands,
       };
 
   static final Map<String, NyInstrCode> _mnemonics = {

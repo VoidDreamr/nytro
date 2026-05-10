@@ -26,25 +26,10 @@ class NyLoadInstr extends NyInstr {
       throw ArgumentError('This instruction takes 3 arguments.');
     }
 
-    late final NyMemoryRef src;
-    if (operands[0] is NyMemoryRef) {
-      src = operands[0] as NyMemoryRef;
-    } else {
-      throw ArgumentError('Argument 0 should be a memory reference.');
-    }
-    late final NyInteger count;
-    if (operands[1] is NyInteger) {
-      count = operands[1] as NyInteger;
-    } else {
-      throw ArgumentError('Argument 1 should be an integer.');
-    }
-    late final NyRegisterRef dest;
-    if (operands[2] is NyRegisterRef) {
-      dest = operands[2] as NyRegisterRef;
-    } else {
-      throw ArgumentError('Argument 2 should be a register reference.');
-    }
-
-    return NyLoadInstr(src: src, count: count, dest: dest);
+    return NyLoadInstr(
+      src: NyInstr.expect<NyMemoryRef>(operands[0], 0),
+      count: NyInstr.expect<NyInteger>(operands[1], 1),
+      dest: NyInstr.expect<NyRegisterRef>(operands[2], 2),
+    );
   }
 }
