@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:nytro/core/instructions/ny_add_instr.dart';
 import 'package:nytro/core/instructions/ny_alloc_instr.dart';
 import 'package:nytro/core/instructions/ny_del_instr.dart';
+import 'package:nytro/core/instructions/ny_div_instr.dart';
 import 'package:nytro/core/instructions/ny_load_instr.dart';
+import 'package:nytro/core/instructions/ny_mul_instr.dart';
 import 'package:nytro/core/instructions/ny_store_instr.dart';
+import 'package:nytro/core/instructions/ny_sub_instr.dart';
 import 'package:nytro/core/instructions/ny_write_instr.dart';
 import 'package:nytro/core/ny_type.dart';
 import 'package:path/path.dart' as p;
@@ -17,6 +20,9 @@ void main() async {
     NyInstrData(type: NyAllocInstr, mnemonic: 'ALLOC'),
     NyInstrData(type: NyDelInstr, mnemonic: 'DEL'),
     NyInstrData(type: NyAddInstr, mnemonic: 'ADD', subTypes: NyTypes.all),
+    NyInstrData(type: NySubInstr, mnemonic: 'SUB', subTypes: NyTypes.all),
+    NyInstrData(type: NyMulInstr, mnemonic: 'MUL', subTypes: NyTypes.all),
+    NyInstrData(type: NyDivInstr, mnemonic: 'DIV', subTypes: NyTypes.all),
   ]);
 
   await File(
