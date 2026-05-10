@@ -36,7 +36,7 @@ abstract final class NyMath {
     if (a is Vector && b is Vector) {
       return divVector<Vector>(a, b) as T;
     } else {
-      return ((a as dynamic) * (b as dynamic)) as T;
+      return ((a as dynamic) / (b as dynamic)) as T;
     }
   }
 
