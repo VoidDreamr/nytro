@@ -1,8 +1,8 @@
 import 'package:nytro/core/instructions/ny_instr.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
-import 'package:nytro/core/ny_layout.dart';
 import 'package:nytro/core/ny_math.dart';
 import 'package:nytro/core/ny_program.dart';
+import 'package:nytro/core/ny_type.dart';
 
 class NyDivInstr<T> extends NyInstr {
   final NyFloatLike a;
@@ -16,7 +16,7 @@ class NyDivInstr<T> extends NyInstr {
     final a = program.register.resolve<T>(this.a);
     final b = program.register.resolve<T>(this.b);
     final result = NyMath.div(a, b);
-    program.register.write(dest.slot, dest.offset, NyLayout.pack(result));
+    program.register.write(dest.slot, dest.offset, NyTypes.pack(result));
 
     program.pc++;
   }

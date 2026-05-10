@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:nytro/core/instructions/ny_operand.dart';
-import 'package:nytro/core/ny_layout.dart';
+import 'package:nytro/core/ny_type.dart';
 
 class NyRegister {
   static const int slotCount = 16;
@@ -54,7 +54,7 @@ class NyRegister {
     if (op is NyConstant && T == double) {
       return op.value as T;
     } else if (op is NyRegisterRef) {
-      return NyLayout.unpack<T>(buffer, index(op.slot, op.offset));
+      return NyTypes.unpack<T>(buffer, index(op.slot, op.offset));
     }
     throw ArgumentError('Type/operand mismatch: $T, ${op.runtimeType}');
   }
