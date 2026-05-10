@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:nytro/core/instructions/ny_operand.dart';
+
 class NyRegister {
   static const int slotCount = 16;
   static const int laneCount = 16;
@@ -45,6 +47,18 @@ class NyRegister {
   /// Sets all values to 0.
   void reset() {
     buffer.fillRange(0, buffer.length, 0);
+  }
+
+  T resolve<T>(NyFloatLike op) {
+    if (T == double) {
+      if (op is NyConstant) {
+        return op.value as T;
+      } else {
+        final reg = op as NyRegisterRef;
+        return get(reg.slot, reg.offset) as T;
+      }
+    }
+    throw ArgumentError('Invalid type for T: $T');
   }
 
   String dump() {

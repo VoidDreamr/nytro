@@ -1,3 +1,4 @@
+import 'package:nytro/core/instructions/ny_add_instr.dart';
 import 'package:nytro/core/instructions/ny_alloc_instr.dart';
 import 'package:nytro/core/instructions/ny_del_instr.dart';
 import 'package:nytro/core/instructions/ny_load_instr.dart';
@@ -22,7 +23,8 @@ enum NyInstrCode {
   load(mnemonic: 'LOAD'),
   store(mnemonic: 'STORE'),
   alloc(mnemonic: 'ALLOC'),
-  del(mnemonic: 'DEL');
+  del(mnemonic: 'DEL'),
+  addFloat(mnemonic: 'ADD_FLOAT');
 
   static final Map<NyInstrCode, NyInstr Function(List<NyOperand>)> _factories =
       {
@@ -31,6 +33,7 @@ enum NyInstrCode {
         NyInstrCode.store: NyStoreInstr.fromOperands,
         NyInstrCode.alloc: NyAllocInstr.fromOperands,
         NyInstrCode.del: NyDelInstr.fromOperands,
+        NyInstrCode.addFloat: NyAddInstr.fromOperands<double>,
       };
 
   static final Map<String, NyInstrCode> _mnemonics = {
