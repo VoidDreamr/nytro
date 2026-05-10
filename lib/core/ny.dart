@@ -1,4 +1,4 @@
-import 'package:nytro/core/instructions/ny_instr.dart';
+import 'package:nytro/core/instructions/ny_instr_set.g.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
 import 'package:nytro/core/ny_program.dart';
 
@@ -11,7 +11,7 @@ abstract final class Ny {
       final args = line.$2.trim().split(RegExp(r'\s+'));
       if (args.isEmpty || args[0].startsWith('#')) continue;
 
-      NyInstrCode? code = NyInstrCode.fromMnemonic(args[0]);
+      NyInstrSet? code = NyInstrSet.fromMnemonic(args[0]);
       _assert(
         code != null,
         'Invalid instruction code: ${args[0]}',
