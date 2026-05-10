@@ -21,3 +21,9 @@ class NyConstant implements NyFloatLike {
 
   NyConstant({required this.value});
 }
+
+class NyInteger implements NyOperand {
+  final int value;
+
+  NyInteger({required this.value});
+}

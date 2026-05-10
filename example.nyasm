@@ -1,3 +1,5 @@
 WRITE 1f r0
 WRITE 2f r1
-ADD_FLOAT 3f r1:0 r1:1
+WRITE 3f r1:0 r1:1
+LOAD m0 4 r2:2
+LOAD m0:2 2 r3:1

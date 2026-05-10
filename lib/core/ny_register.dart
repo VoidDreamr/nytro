@@ -20,6 +20,21 @@ class NyRegister {
     buffer[_index(slot, offset)] = value;
   }
 
+  void setRange(
+    int slot,
+    int offset,
+    Iterable<double> values,
+    int vOffset,
+    int count,
+  ) {
+    buffer.setRange(
+      _index(slot, offset),
+      _index(slot, offset) + count,
+      values,
+      vOffset,
+    );
+  }
+
   /// Writes a list of values at `slot:offset`.
   void write(int slot, int offset, List<double> values) {
     for (int i = 0; i < laneCount - offset && i < values.length; i++) {

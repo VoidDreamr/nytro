@@ -1,3 +1,4 @@
+import 'package:nytro/core/instructions/ny_load_inst.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
 import 'package:nytro/core/instructions/ny_write_instr.dart';
 import 'package:nytro/core/ny_program.dart';
@@ -9,10 +10,14 @@ abstract class NyInstr {
 }
 
 enum NyInstrCode {
-  write(mnemonic: 'WRITE');
+  write(mnemonic: 'WRITE'),
+  load(mnemonic: 'LOAD');
 
   static final Map<NyInstrCode, NyInstr Function(List<NyOperand>)> _factories =
-      {NyInstrCode.write: NyWriteInstr.fromOperands};
+      {
+        NyInstrCode.write: NyWriteInstr.fromOperands,
+        NyInstrCode.load: NyLoadInstr.fromOperands,
+      };
 
   static final Map<String, NyInstrCode> _mnemonics = {
     for (final code in NyInstrCode.values) code.mnemonic: code,

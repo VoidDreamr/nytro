@@ -47,7 +47,9 @@ abstract final class Ny {
             opBuffer.add(NyMemoryRef(index: slot!, offset: offset!));
           }
         } else {
-          _assert(false, 'Invalid argument format.', src, line.$1);
+          final nyint = int.tryParse(arg);
+          _assert(nyint != null, 'Invalid integer format $arg', src, line.$1);
+          opBuffer.add(NyInteger(value: nyint!));
         }
       }
 
