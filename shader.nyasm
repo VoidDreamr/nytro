@@ -1,0 +1,6 @@
+LOAD m0 4 r0
+ADD_FLOAT r0:0 r0:1 r1
+ADD_FLOAT r0:2 r1 r1
+DIV_FLOAT r1 3f r1
+WRITE r1 r1 r1 1f r0
+STORE r0 4 m2
