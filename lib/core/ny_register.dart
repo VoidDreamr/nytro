@@ -50,11 +50,15 @@ class NyRegister {
     buffer.fillRange(0, buffer.length, 0);
   }
 
-  T resolve<T>(NyFloatLike op) {
+  T resolve<T>(NyFloatLike op, T? out) {
+    return resolveTyped(op, NyTypes.find<T>()!, out);
+  }
+
+  T resolveTyped<T>(NyFloatLike op, NyType<T> type, T? out) {
     if (op is NyConstant && T == double) {
       return op.value as T;
     } else if (op is NyRegisterRef) {
-      return NyTypes.unpack<T>(buffer, index(op.slot, op.offset));
+      return type.unpack(buffer, index(op.slot, op.offset), out);
     }
     throw ArgumentError('Type/operand mismatch: $T, ${op.runtimeType}');
   }

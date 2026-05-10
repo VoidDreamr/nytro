@@ -1,46 +1,17 @@
-import 'package:nytro/core/instructions/ny_instr.dart';
+import 'package:nytro/core/instructions/ny_binary_instr.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
 import 'package:nytro/core/ny_math.dart';
-import 'package:nytro/core/ny_program.dart';
-import 'package:nytro/core/ny_type.dart';
 
-class NyMulInstr<T> extends NyInstr {
-  final NyFloatLike a;
-  final NyFloatLike b;
-  final NyRegisterRef dest;
-
-  NyMulInstr({required this.a, required this.b, required this.dest});
+class NyMulInstr<T> extends NyBinaryInstr<T> {
+  NyMulInstr({required super.a, required super.b, required super.dest});
 
   @override
-  void execute(NyProgram program) {
-    final a = program.register.resolve<T>(this.a);
-    final b = program.register.resolve<T>(this.b);
-    final result = NyMath.mul(a, b);
-    program.register.write(dest.slot, dest.offset, NyTypes.pack(result));
-
-    program.pc++;
+  T eval(T a, T b) {
+    return NyMath.mul(a, b);
   }
 
   static NyMulInstr fromOperands<T>(List<NyOperand> operands) {
-    if (operands.length != 3) {
-      throw ArgumentError('This instruction takes 3 arguments.');
-    }
-
-    late final NyFloatLike a;
-    late final NyFloatLike b;
-
-    if (T == double) {
-      a = NyInstr.expect<NyFloatLike>(operands[0], 0);
-      b = NyInstr.expect<NyFloatLike>(operands[1], 1);
-    } else {
-      a = NyInstr.expect<NyRegisterRef>(operands[0], 0);
-      b = NyInstr.expect<NyRegisterRef>(operands[1], 1);
-    }
-
-    return NyMulInstr<T>(
-      a: a,
-      b: b,
-      dest: NyInstr.expect<NyRegisterRef>(operands[2], 2),
-    );
+    NyBinaryOperands biops = NyBinaryInstr.validateFor<T>(operands);
+    return NyMulInstr<T>(a: biops.a, b: biops.b, dest: biops.dest);
   }
 }

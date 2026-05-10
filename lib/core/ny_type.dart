@@ -6,20 +6,20 @@ sealed class NyType<T> {
 
   const NyType({required this.type, required this.suffix});
 
-  List<double> pack(T value);
-  T unpack(List<double> buffer, int offset);
+  void pack(T value, List<double> buffer, int offset);
+  T unpack(List<double> buffer, int offset, T? out);
 }
 
 class NyFloatType extends NyType<double> {
   const NyFloatType() : super(type: double, suffix: 'FLOAT');
 
   @override
-  List<double> pack(double value) {
-    return [value];
+  void pack(double value, List<double> buffer, int offset) {
+    buffer[offset] = value;
   }
 
   @override
-  double unpack(List<double> buffer, int offset) {
+  double unpack(List<double> buffer, int offset, double? out) {
     return buffer[offset];
   }
 }
@@ -28,13 +28,15 @@ class NyVec2Type extends NyType<Vector2> {
   const NyVec2Type() : super(type: Vector2, suffix: 'VEC2');
 
   @override
-  List<double> pack(Vector2 value) {
-    return [value.x, value.y];
+  void pack(Vector2 value, List<double> buffer, int offset) {
+    buffer.setRange(offset, offset + 2, value.storage);
   }
 
   @override
-  Vector2 unpack(List<double> buffer, int offset) {
-    return Vector2(buffer[offset], buffer[offset + 1]);
+  Vector2 unpack(List<double> buffer, int offset, Vector2? out) {
+    out ??= Vector2.zero();
+    out.storage.setRange(0, 2, buffer, offset);
+    return out;
   }
 }
 
@@ -42,13 +44,15 @@ class NyVec3Type extends NyType<Vector3> {
   const NyVec3Type() : super(type: Vector3, suffix: 'VEC3');
 
   @override
-  List<double> pack(Vector3 value) {
-    return [value.x, value.y, value.z];
+  void pack(Vector3 value, List<double> buffer, int offset) {
+    buffer.setRange(offset, offset + 3, value.storage);
   }
 
   @override
-  Vector3 unpack(List<double> buffer, int offset) {
-    return Vector3(buffer[offset], buffer[offset + 1], buffer[offset + 2]);
+  Vector3 unpack(List<double> buffer, int offset, Vector3? out) {
+    out ??= Vector3.zero();
+    out.storage.setRange(0, 3, buffer, offset);
+    return out;
   }
 }
 
@@ -56,18 +60,15 @@ class NyVec4Type extends NyType<Vector4> {
   const NyVec4Type() : super(type: Vector4, suffix: 'VEC4');
 
   @override
-  List<double> pack(Vector4 value) {
-    return [value.x, value.y, value.z, value.w];
+  void pack(Vector4 value, List<double> buffer, int offset) {
+    buffer.setRange(offset, offset + 4, value.storage);
   }
 
   @override
-  Vector4 unpack(List<double> buffer, int offset) {
-    return Vector4(
-      buffer[offset],
-      buffer[offset + 1],
-      buffer[offset + 2],
-      buffer[offset + 3],
-    );
+  Vector4 unpack(List<double> buffer, int offset, Vector4? out) {
+    out ??= Vector4.zero();
+    out.storage.setRange(0, 4, buffer, offset);
+    return out;
   }
 }
 
@@ -86,19 +87,19 @@ abstract final class NyTypes {
   static NyType<T>? find<T>() => _mapped[T] as NyType<T>;
   static NyType? findDynamic(Type type) => _mapped[type];
 
-  static List<double> pack(dynamic value) {
+  static void pack(dynamic value, List<double> buffer, int offset) {
     NyType? type = findDynamic(value.runtimeType);
     if (type != null) {
-      return type.pack(value);
+      type.pack(value, buffer, offset);
     } else {
       throw ArgumentError('Cannot pack value of type: ${value.runtimeType}');
     }
   }
 
-  static T unpack<T>(List<double> buffer, int offset) {
+  static T unpack<T>(List<double> buffer, int offset, T? out) {
     NyType<T>? type = find<T>();
     if (type != null) {
-      return type.unpack(buffer, offset);
+      return type.unpack(buffer, offset, out);
     } else {
       throw ArgumentError('Cannot unpack value of type: $T');
     }
