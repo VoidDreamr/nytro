@@ -1,3 +1,5 @@
+import 'package:nytro/core/instructions/ny_alloc_instr.dart';
+import 'package:nytro/core/instructions/ny_del_instr.dart';
 import 'package:nytro/core/instructions/ny_load_instr.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
 import 'package:nytro/core/instructions/ny_store_instr.dart';
@@ -18,13 +20,17 @@ abstract class NyInstr {
 enum NyInstrCode {
   write(mnemonic: 'WRITE'),
   load(mnemonic: 'LOAD'),
-  store(mnemonic: 'STORE');
+  store(mnemonic: 'STORE'),
+  alloc(mnemonic: 'ALLOC'),
+  del(mnemonic: 'DEL');
 
   static final Map<NyInstrCode, NyInstr Function(List<NyOperand>)> _factories =
       {
         NyInstrCode.write: NyWriteInstr.fromOperands,
         NyInstrCode.load: NyLoadInstr.fromOperands,
         NyInstrCode.store: NyStoreInstr.fromOperands,
+        NyInstrCode.alloc: NyAllocInstr.fromOperands,
+        NyInstrCode.del: NyDelInstr.fromOperands,
       };
 
   static final Map<String, NyInstrCode> _mnemonics = {
