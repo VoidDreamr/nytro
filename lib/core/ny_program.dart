@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:nytro/core/instructions/ny_instr.dart';
 import 'package:nytro/core/ny_binding.dart';
 import 'package:nytro/core/ny_register.dart';
+import 'package:nytro/core/ny_texture_2.dart';
 import 'package:nytro/core/ny_type.dart';
 
 class NyProgram {
@@ -22,9 +23,9 @@ class NyProgram {
 
   void alloc(int index, int count) {
     if (memory.containsKey(index)) {
-      throw ArgumentError('Cannot allocate an existing memory slot.');
+      throw ArgumentError('Cannot allocate an existing memory index.');
     }
-    memory.addAll({index: Float32List(count)});
+    memory[index] = Float32List(count);
   }
 
   NyBinding<T> bind<T>(int index, [int offset = 0]) {
@@ -45,9 +46,17 @@ class NyProgram {
     );
   }
 
+  void bindTexture2(int index, NyTexture2 tex) {
+    if (!memory.containsKey(index)) {
+      memory[index] = tex.buffer;
+    } else {
+      throw StateError('Cannot bind a texture to an existing memory index.');
+    }
+  }
+
   void del(int index) {
     if (!memory.containsKey(index)) {
-      throw ArgumentError('Cannot delete a non-existing memory slot.');
+      throw ArgumentError('Cannot delete a non-existing memory index.');
     }
     memory.remove(index);
   }

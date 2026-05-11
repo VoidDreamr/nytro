@@ -6,6 +6,7 @@ import 'package:nytro/core/instructions/ny_del_instr.dart';
 import 'package:nytro/core/instructions/ny_div_instr.dart';
 import 'package:nytro/core/instructions/ny_load_instr.dart';
 import 'package:nytro/core/instructions/ny_mul_instr.dart';
+import 'package:nytro/core/instructions/ny_sample_instr.dart';
 import 'package:nytro/core/instructions/ny_store_instr.dart';
 import 'package:nytro/core/instructions/ny_sub_instr.dart';
 import 'package:nytro/core/instructions/ny_write_instr.dart';
@@ -23,6 +24,7 @@ void main() async {
     NyInstrData(type: NySubInstr, mnemonic: 'SUB', subTypes: NyTypes.all),
     NyInstrData(type: NyMulInstr, mnemonic: 'MUL', subTypes: NyTypes.all),
     NyInstrData(type: NyDivInstr, mnemonic: 'DIV', subTypes: NyTypes.all),
+    NyInstrData(type: NySampleInstr, mnemonic: 'SAMPLE_TEX2'),
   ]);
 
   await File(

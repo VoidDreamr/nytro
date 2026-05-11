@@ -1,5 +1,5 @@
-LOAD m0 4 r0
-LOAD m1 1 r0:4
+LOAD m1 2 r0:4
+SAMPLE_TEX2 m0 r0:4 r0
 WRITE 1f 1f 1f r1
 WRITE r0:4 r0:4 r0:4 r1:3
 SUB_VEC3 r1 r0 r2
