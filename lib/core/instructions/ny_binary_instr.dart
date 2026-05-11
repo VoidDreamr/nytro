@@ -13,7 +13,7 @@ abstract class NyBinaryInstr<T> extends NyInstr {
   final NyRegisterRef dest;
 
   NyBinaryInstr({required this.a, required this.b, required this.dest}) {
-    _type = NyTypes.find<T>()!;
+    _type = NyTypes.find<T>();
   }
 
   @override

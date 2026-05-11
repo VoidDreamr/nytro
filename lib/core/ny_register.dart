@@ -51,7 +51,7 @@ class NyRegister {
   }
 
   T resolve<T>(NyFloatLike op, T? out) {
-    return resolveTyped(op, NyTypes.find<T>()!, out);
+    return resolveTyped(op, NyTypes.find<T>(), out);
   }
 
   T resolveTyped<T>(NyFloatLike op, NyType<T> type, T? out) {

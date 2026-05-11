@@ -89,11 +89,20 @@ abstract final class NyTypes {
     for (NyType type in all) type.type: type,
   };
 
-  static NyType<T>? find<T>() => _mapped[T] as NyType<T>;
-  static NyType? findDynamic(Type type) => _mapped[type];
+  static NyType<T>? tryFind<T>() => _mapped[T] as NyType<T>?;
+  static NyType? tryFindDynamic(Type type) => _mapped[type];
+
+  static NyType<T> find<T>() {
+    NyType<T>? type = tryFind<T>();
+    if (type != null) {
+      return type;
+    } else {
+      throw StateError('Unsupported type $T');
+    }
+  }
 
   static void pack(dynamic value, List<double> buffer, int offset) {
-    NyType? type = findDynamic(value.runtimeType);
+    NyType? type = tryFindDynamic(value.runtimeType);
     if (type != null) {
       type.pack(value, buffer, offset);
     } else {
@@ -102,7 +111,7 @@ abstract final class NyTypes {
   }
 
   static T unpack<T>(List<double> buffer, int offset, T? out) {
-    NyType<T>? type = find<T>();
+    NyType<T>? type = tryFind<T>();
     if (type != null) {
       return type.unpack(buffer, offset, out);
     } else {
