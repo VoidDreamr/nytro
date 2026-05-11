@@ -16,7 +16,7 @@ Everything must be designed around these constraints as immutable truths of the 
 
 The current version of Nytro exposes a simple shader-style workflow using `shader.nyasm` and `input.png`.
 
-`shader.nyasm` is executed as a pixel-wise image filter over `input.png`, producing `output.png`.
+`shader.nyasm` is executed as pixel shader using `input.png` as an input texture, producing `output.png`.
 
 ### Generate Source Files
 
@@ -41,7 +41,7 @@ in the project root, then run:
 dart run
 ```
 
-After execution, the filtered image will be written to:
+After execution, the shader will be written to:
 
 ```txt
 output.png
@@ -51,7 +51,7 @@ output.png
 
 The shader entry point currently uses the following memory bindings:
 
-- `m0` — `vec4` input color
+- `m0` — `tex2` input texture
 - `m1` — `vec2` normalized UV coordinates
 - `m2` — `vec4` output color
 

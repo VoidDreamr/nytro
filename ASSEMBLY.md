@@ -6,16 +6,16 @@ Nytro Assembly (`.nyasm`) is the human-readable code for writing instructions fo
 
 ### Types
 
-| Name       | Lanes   | Description                                                                                                    |
-| ---------- | ------- | -------------------------------------------------------------------------------------------------------------- |
-| `register` | N/A     | A register slot, with an optional lane offset (default: 0). This is written `r<SLOT>[:<OFFSET>]`.              |
-| `memory`   | N/A     | A memory resource index, with an optional starting offset (default: 0). This is written `m<INDEX>[:<OFFSET>]`. |
-| `int`      | N/A     | An integer value used for counts, slots, indexes, and offsets. Integer values are not stored in the VM.        |
-| `float`    | `1`     | A single float from a `register` or an immediate constant written as `<VALUE>f`.                               |
-| `vec2`     | `2`     | A 2D vector from a `register`.                                                                                 |
-| `vec3`     | `3`     | A 3D vector from a `register`.                                                                                 |
-| `vec4`     | `4`     | A 4D vector from a `register`.                                                                                 |
-| ~~`tex2`~~ | ~~N/A~~ | ~~A 2D texture resource referenced from `memory`. Cannot be stored in a register.~~                            |
+| Name       | Lanes | Description                                                                                                    |
+| ---------- | ----- | -------------------------------------------------------------------------------------------------------------- |
+| `register` | N/A   | A register slot, with an optional lane offset (default: 0). This is written `r<SLOT>[:<OFFSET>]`.              |
+| `memory`   | N/A   | A memory resource index, with an optional starting offset (default: 0). This is written `m<INDEX>[:<OFFSET>]`. |
+| `int`      | N/A   | An integer value used for counts, slots, indexes, and offsets. Integer values are not stored in the VM.        |
+| `float`    | `1`   | A single float from a `register` or an immediate constant written as `<VALUE>f`.                               |
+| `vec2`     | `2`   | A 2D vector from a `register`.                                                                                 |
+| `vec3`     | `3`   | A 3D vector from a `register`.                                                                                 |
+| `vec4`     | `4`   | A 4D vector from a `register`.                                                                                 |
+| `tex2`     | N/A   | A 2D texture resource referenced from `memory`. Cannot be stored in a register.                                |
 
 ## WRITE
 
@@ -316,7 +316,7 @@ Scales a 4D vector value by a scalar and stores the result in a register.
 | `scalar` | `true`   | `float`    | Scalar value                          |
 | `dest`   | `true`   | `register` | Destination register, stores a `vec4` |
 
-## ~~SAMPLE_TEX2~~
+## SAMPLE_TEX2
 
 Samples a 2D texture and stores the resulting `vec4` color in a register.
 
