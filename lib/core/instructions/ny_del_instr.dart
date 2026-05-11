@@ -9,10 +9,7 @@ class NyDelInstr extends NyInstr {
 
   @override
   void execute(NyProgram program) {
-    if (!program.memory.keys.contains(dest.index)) {
-      throw ArgumentError('Cannot delete a non-existing memory slot.');
-    }
-    program.memory.remove(dest.index);
+    program.del(dest.index);
     program.pc++;
   }
 

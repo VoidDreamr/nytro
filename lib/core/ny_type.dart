@@ -3,15 +3,20 @@ import 'package:vector_math/vector_math.dart';
 sealed class NyType<T> {
   final Type type;
   final String suffix;
+  final int sizeof;
 
-  const NyType({required this.type, required this.suffix});
+  const NyType({
+    required this.type,
+    required this.suffix,
+    required this.sizeof,
+  });
 
   void pack(T value, List<double> buffer, int offset);
   T unpack(List<double> buffer, int offset, T? out);
 }
 
 class NyFloatType extends NyType<double> {
-  const NyFloatType() : super(type: double, suffix: 'FLOAT');
+  const NyFloatType() : super(type: double, suffix: 'FLOAT', sizeof: 1);
 
   @override
   void pack(double value, List<double> buffer, int offset) {
@@ -25,7 +30,7 @@ class NyFloatType extends NyType<double> {
 }
 
 class NyVec2Type extends NyType<Vector2> {
-  const NyVec2Type() : super(type: Vector2, suffix: 'VEC2');
+  const NyVec2Type() : super(type: Vector2, suffix: 'VEC2', sizeof: 2);
 
   @override
   void pack(Vector2 value, List<double> buffer, int offset) {
@@ -41,7 +46,7 @@ class NyVec2Type extends NyType<Vector2> {
 }
 
 class NyVec3Type extends NyType<Vector3> {
-  const NyVec3Type() : super(type: Vector3, suffix: 'VEC3');
+  const NyVec3Type() : super(type: Vector3, suffix: 'VEC3', sizeof: 3);
 
   @override
   void pack(Vector3 value, List<double> buffer, int offset) {
@@ -57,7 +62,7 @@ class NyVec3Type extends NyType<Vector3> {
 }
 
 class NyVec4Type extends NyType<Vector4> {
-  const NyVec4Type() : super(type: Vector4, suffix: 'VEC4');
+  const NyVec4Type() : super(type: Vector4, suffix: 'VEC4', sizeof: 4);
 
   @override
   void pack(Vector4 value, List<double> buffer, int offset) {

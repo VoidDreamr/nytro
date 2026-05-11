@@ -17,4 +17,18 @@ class NyProgram {
       instructions[pc].execute(this);
     }
   }
+
+  void alloc(int index, int count) {
+    if (memory.keys.contains(index)) {
+      throw ArgumentError('Cannot allocate an existing memory slot.');
+    }
+    memory.addAll({index: Float32List(count)});
+  }
+
+  void del(int index) {
+    if (!memory.keys.contains(index)) {
+      throw ArgumentError('Cannot delete a non-existing memory slot.');
+    }
+    memory.remove(index);
+  }
 }

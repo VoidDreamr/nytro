@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:nytro/core/instructions/ny_instr.dart';
 import 'package:nytro/core/instructions/ny_operand.dart';
 import 'package:nytro/core/ny_program.dart';
@@ -12,10 +10,7 @@ class NyAllocInstr extends NyInstr {
 
   @override
   void execute(NyProgram program) {
-    if (program.memory.keys.contains(dest.index)) {
-      throw ArgumentError('Cannot allocate an existing memory slot.');
-    }
-    program.memory.addAll({dest.index: Float32List(count.value)});
+    program.alloc(dest.index, count.value);
     program.pc++;
   }
 
