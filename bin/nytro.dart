@@ -1,18 +1,15 @@
-import 'dart:typed_data';
-
 import 'package:nytro/core/ny.dart';
-import 'package:nytro/core/ny_program.dart';
 import 'dart:io';
 import 'package:image/image.dart';
+import 'package:vector_math/vector_math.dart';
 
 void main(List<String> arguments) async {
   final src = await File('shader.nyasm').readAsString();
-  NyProgram program = Ny.createAssemblyProgram(src);
-  program.memory.addAll({
-    0: Float32List(4),
-    1: Float32List(2),
-    2: Float32List(4),
-  });
+  final program = Ny.createAssemblyProgram(src);
+
+  final colorIn = program.bind<Vector4>(0);
+  final uvIn = program.bind<Vector2>(1);
+  final colorOut = program.bind<Vector4>(2);
 
   final bytes = await File('input.png').readAsBytes();
   final image = decodeImage(bytes);
@@ -22,35 +19,38 @@ void main(List<String> arguments) async {
   final output = Image(width: image.width, height: image.height);
 
   final sw = Stopwatch()..start();
-  Pixel? pixel;
   for (int y = 0; y < image.height; y++) {
     for (int x = 0; x < image.width; x++) {
-      pixel = image.getPixel(x, y, pixel);
-
-      program.memory[0]![0] = pixel.rNormalized.toDouble();
-      program.memory[0]![1] = pixel.gNormalized.toDouble();
-      program.memory[0]![2] = pixel.bNormalized.toDouble();
-      program.memory[0]![3] = pixel.aNormalized.toDouble();
-
-      program.memory[1]![0] = pixel.xNormalized.toDouble();
-      program.memory[1]![1] = pixel.yNormalized.toDouble();
+      Pixel pixel = image.getPixel(x, y);
+      colorIn.write(
+        Vector4(
+          pixel.rNormalized.toDouble(),
+          pixel.gNormalized.toDouble(),
+          pixel.bNormalized.toDouble(),
+          pixel.aNormalized.toDouble(),
+        ),
+      );
+      uvIn.write(
+        Vector2(pixel.xNormalized.toDouble(), pixel.yNormalized.toDouble()),
+      );
 
       program.run();
 
+      Vector4 color = colorOut.read();
       output.setPixelRgba(
         x,
         y,
-        program.memory[2]![0] * 255,
-        program.memory[2]![1] * 255,
-        program.memory[2]![2] * 255,
-        program.memory[2]![3] * 255,
+        color.r * 255,
+        color.g * 255,
+        color.b * 255,
+        color.a * 255,
       );
     }
   }
   sw.stop();
 
   print(
-    'Elapsed: ${sw.elapsed}, Pixels: ${image.width * image.height}, Pixel Rate: ${(image.width * image.height / sw.elapsedMilliseconds).toStringAsFixed(0)} px/ms',
+    'Elapsed: ${sw.elapsed}, Pixels: ${image.width * image.height}, Pixel Rate: ${(image.width * image.height / sw.elapsedMilliseconds / 1000.0).toStringAsFixed(3)} Mpx/s',
   );
 
   await File('output.png').writeAsBytes(encodePng(output));
