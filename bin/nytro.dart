@@ -1,12 +1,12 @@
-import 'package:nytro/core/ny.dart';
 import 'dart:io';
 import 'package:image/image.dart';
+import 'package:nytro/core/ny_assembler.dart';
 import 'package:nytro/nytro_image/ny_texture_image.dart';
 import 'package:vector_math/vector_math.dart';
 
 void main(List<String> arguments) async {
   final src = await File('shader.nyasm').readAsString();
-  final program = Ny.createAssemblyProgram(src);
+  final program = NyAssembler.parse(src);
   final uvIn = program.bind<Vector2>(1);
   final colorOut = program.bind<Vector4>(2);
 
