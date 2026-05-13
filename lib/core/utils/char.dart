@@ -8,6 +8,7 @@ abstract final class Char {
   static const int minus = 45;
   static const int period = 46;
   static const int underscore = 95;
+  static const int hashtag = 35;
 
   static bool isWhitespace(int c) {
     return c == 32 || c == 9;

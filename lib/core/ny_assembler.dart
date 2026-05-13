@@ -13,7 +13,14 @@ abstract final class NyAssembler {
     final program = NyProgram();
     final ops = <NyOperand>[];
     while (!read.isEnd) {
+      // Leading whitespace and blank lines.
       if (_isEndOfLine(read)) {
+        continue;
+      }
+
+      // Comments
+      if (read.peek() == Char.hashtag) {
+        _consumeLine(read);
         continue;
       }
 
@@ -42,6 +49,14 @@ abstract final class NyAssembler {
       return true;
     } else {
       return c == Char.eof;
+    }
+  }
+
+  static void _consumeLine(StringReader read) {
+    while (!read.isEnd) {
+      if (Char.isNewline(read.next())) {
+        break;
+      }
     }
   }
 
