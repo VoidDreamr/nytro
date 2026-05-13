@@ -5,25 +5,31 @@ import 'package:nytro/core/instructions/ny_operand.dart';
 import 'package:nytro/core/ny_program.dart';
 
 class NyWriteInstr extends NyInstr {
-  late final Float32List _values;
+  final Float32List _values;
+  final List<int> regIndices = [];
 
   final List<NyFloatLike> operands;
   final NyRegisterRef dest;
 
-  NyWriteInstr({required this.operands, required this.dest}) {
-    _values = Float32List(operands.length);
-  }
-
-  @override
-  void execute(NyProgram program) {
+  NyWriteInstr({required this.operands, required this.dest})
+    : _values = Float32List(operands.length) {
     for (int i = 0; i < operands.length; i++) {
       final op = operands[i];
       if (op is NyConstant) {
         _values[i] = op.value;
-      } else if (op is NyRegisterRef) {
-        _values[i] = program.register.get(op.slot, op.offset);
+      } else {
+        regIndices.add(i);
       }
     }
+  }
+
+  @override
+  void execute(NyProgram program) {
+    for (final reg in regIndices) {
+      final op = operands[reg] as NyRegisterRef;
+      _values[reg] = program.register.get(op.slot, op.offset);
+    }
+
     program.register.write(dest.slot, dest.offset, _values);
     program.pc++;
   }
