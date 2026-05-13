@@ -280,42 +280,6 @@ Divides 4D vector values and stores the result in a register.
 | `b`    | `true`   | `vec4`     | Second value                          |
 | `dest` | `true`   | `register` | Destination register, stores a `vec4` |
 
-## ~~SCALE_VEC2~~
-
-Scales a 2D vector value by a scalar and stores the result in a register.
-
-### Parameters
-
-| Name     | Required | Type       | Description                           |
-| -------- | -------- | ---------- | ------------------------------------- |
-| `vec`    | `true`   | `vec2`     | Vector value                          |
-| `scalar` | `true`   | `float`    | Scalar value                          |
-| `dest`   | `true`   | `register` | Destination register, stores a `vec2` |
-
-## ~~SCALE_VEC3~~
-
-Scales a 3D vector value by a scalar and stores the result in a register.
-
-### Parameters
-
-| Name     | Required | Type       | Description                           |
-| -------- | -------- | ---------- | ------------------------------------- |
-| `vec`    | `true`   | `vec3`     | Vector value                          |
-| `scalar` | `true`   | `float`    | Scalar value                          |
-| `dest`   | `true`   | `register` | Destination register, stores a `vec3` |
-
-## ~~SCALE_VEC4~~
-
-Scales a 4D vector value by a scalar and stores the result in a register.
-
-### Parameters
-
-| Name     | Required | Type       | Description                           |
-| -------- | -------- | ---------- | ------------------------------------- |
-| `vec`    | `true`   | `vec4`     | Vector value                          |
-| `scalar` | `true`   | `float`    | Scalar value                          |
-| `dest`   | `true`   | `register` | Destination register, stores a `vec4` |
-
 ## SAMPLE_TEX2
 
 Samples a 2D texture and stores the resulting `vec4` color in a register.
