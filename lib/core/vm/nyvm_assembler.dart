@@ -1,17 +1,17 @@
-import 'package:nytro/core/instructions/ny_instr_set.g.dart';
-import 'package:nytro/core/instructions/ny_operand.dart';
-import 'package:nytro/core/ny_program.dart';
-import 'package:nytro/core/ny_assembler_exception.dart';
+import 'package:nytro/core/vm/instruction/nyvm_instr_code.g.dart';
+import 'package:nytro/core/vm/instruction/nyvm_operand.dart';
+import 'package:nytro/core/vm/nyvm_program.dart';
+import 'package:nytro/core/vm/nyvm_assembler_exception.dart';
 import 'package:nytro/core/utils/char.dart';
 import 'package:nytro/core/utils/string_reader.dart';
 
-abstract final class NyAssembler {
-  static NyProgram parse(String src) {
+abstract final class NyvmAssembler {
+  static NyvmProgram parse(String src) {
     src = src.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
     final read = StringReader(source: src);
 
-    final program = NyProgram();
-    final ops = <NyOperand>[];
+    final program = NyvmProgram();
+    final ops = <NyvmOperand>[];
     while (!read.isEnd) {
       // Leading whitespace and blank lines.
       if (_isEndOfLine(read)) {
@@ -25,7 +25,7 @@ abstract final class NyAssembler {
       }
 
       ops.clear();
-      NyInstrSet code = _parseOpcode(read);
+      NyvmInstrCode code = _parseOpcode(read);
 
       while (!_isEndOfLine(read)) {
         ops.add(_parseOperand(read));
@@ -34,7 +34,7 @@ abstract final class NyAssembler {
       try {
         program.instructions.add(code.create(ops));
       } catch (e) {
-        throw NyAssemblerException(message: '$e', cursor: read.cursor);
+        throw NyvmAssemblerException(message: '$e', cursor: read.cursor);
       }
     }
 
@@ -60,7 +60,7 @@ abstract final class NyAssembler {
     }
   }
 
-  static NyInstrSet _parseOpcode(StringReader read) {
+  static NyvmInstrCode _parseOpcode(StringReader read) {
     final token = StringBuffer();
     while (true) {
       final c = read.peek();
@@ -69,13 +69,13 @@ abstract final class NyAssembler {
       } else if (c == Char.eof || Char.isWhitespace(c) || Char.isNewline(c)) {
         break;
       } else {
-        throw NyAssemblerException.reject(c, read.cursor);
+        throw NyvmAssemblerException.reject(c, read.cursor);
       }
     }
 
-    final code = NyInstrSet.fromMnemonic(token.toString());
+    final code = NyvmInstrCode.fromMnemonic(token.toString());
     if (code == null) {
-      throw NyAssemblerException(
+      throw NyvmAssemblerException(
         message: 'Unknown opcode $token',
         cursor: read.cursor,
       );
@@ -84,12 +84,12 @@ abstract final class NyAssembler {
     return code;
   }
 
-  static NyOperand _parseOperand(StringReader read) {
+  static NyvmOperand _parseOperand(StringReader read) {
     return _tryParseConstant(read) ??
         _tryParseInteger(read) ??
         _tryParseRegisterRef(read) ??
         _tryParseMemoryRef(read) ??
-        (throw NyAssemblerException(
+        (throw NyvmAssemblerException(
           message: 'Invalid operand',
           cursor: read.cursor,
         ));
@@ -99,7 +99,7 @@ abstract final class NyAssembler {
     return Char.isWhitespace(c) || Char.isNewline(c) || c == Char.eof;
   }
 
-  static NyConstant? _tryParseConstant(StringReader read) {
+  static NyvmConstant? _tryParseConstant(StringReader read) {
     final start = read.cursor;
     final token = StringBuffer();
 
@@ -135,12 +135,12 @@ abstract final class NyAssembler {
         read.cursor = start;
         return null;
       } else {
-        return NyConstant(value: value);
+        return NyvmConstant(value: value);
       }
     }
   }
 
-  static NyInteger? _tryParseInteger(StringReader read) {
+  static NyvmInteger? _tryParseInteger(StringReader read) {
     final start = read.cursor;
     final token = StringBuffer();
 
@@ -161,11 +161,11 @@ abstract final class NyAssembler {
       read.cursor = start;
       return null;
     } else {
-      return NyInteger(value: value);
+      return NyvmInteger(value: value);
     }
   }
 
-  static T? _tryParseRef<T extends NyOperand>(
+  static T? _tryParseRef<T extends NyvmOperand>(
     StringReader read,
     int prefixCode,
     T Function(int index, int offset) builder,
@@ -211,15 +211,16 @@ abstract final class NyAssembler {
     }
   }
 
-  static NyMemoryRef? _tryParseMemoryRef(StringReader read) => _tryParseRef(
+  static NyvmMemoryRef? _tryParseMemoryRef(StringReader read) => _tryParseRef(
     read,
     Char.m,
-    (index, offset) => NyMemoryRef(index: index, offset: offset),
+    (index, offset) => NyvmMemoryRef(index: index, offset: offset),
   );
 
-  static NyRegisterRef? _tryParseRegisterRef(StringReader read) => _tryParseRef(
-    read,
-    Char.r,
-    (slot, offset) => NyRegisterRef(slot: slot, offset: offset),
-  );
+  static NyvmRegisterRef? _tryParseRegisterRef(StringReader read) =>
+      _tryParseRef(
+        read,
+        Char.r,
+        (slot, offset) => NyvmRegisterRef(slot: slot, offset: offset),
+      );
 }

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:nytro/core/ny_type.dart';
+import 'package:nytro/core/vm/nyvm_type.dart';
 import 'package:vector_math/vector_math.dart';
 
 class NyTexture2 {
@@ -35,7 +35,7 @@ class NyTexture2 {
   }
 
   Vector4 get(int x, int y, [Vector4? out]) {
-    return NyTypes.vec4.unpack(buffer, index(x, y), out);
+    return NyvmTypes.vec4.unpack(buffer, index(x, y), out);
   }
 
   void sample(double u, double v, Vector4 out) {
@@ -47,10 +47,10 @@ class NyTexture2 {
     final y1 = y.ceil();
     final xn = x - x0;
 
-    NyTypes.vec4.unpack(buffer, index(x0, y0), _tl);
-    NyTypes.vec4.unpack(buffer, index(x1, y0), _tr);
-    NyTypes.vec4.unpack(buffer, index(x0, y1), _bl);
-    NyTypes.vec4.unpack(buffer, index(x1, y1), _br);
+    NyvmTypes.vec4.unpack(buffer, index(x0, y0), _tl);
+    NyvmTypes.vec4.unpack(buffer, index(x1, y0), _tr);
+    NyvmTypes.vec4.unpack(buffer, index(x0, y1), _bl);
+    NyvmTypes.vec4.unpack(buffer, index(x1, y1), _br);
 
     Vector4.mix(_tl, _tr, xn, _top);
     Vector4.mix(_bl, _br, xn, _bot);
@@ -58,7 +58,7 @@ class NyTexture2 {
   }
 
   void set(int x, int y, Vector4 color) {
-    return NyTypes.vec4.pack(color, buffer, index(x, y));
+    return NyvmTypes.vec4.pack(color, buffer, index(x, y));
   }
 
   static NyTexture2 create(int width, int height) {

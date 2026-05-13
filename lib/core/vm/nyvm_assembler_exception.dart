@@ -1,18 +1,18 @@
 import 'package:nytro/core/utils/string_reader.dart';
 
-class NyAssemblerException implements Exception {
+class NyvmAssemblerException implements Exception {
   final String message;
   final Cursor cursor;
 
-  NyAssemblerException({required this.message, required this.cursor});
+  NyvmAssemblerException({required this.message, required this.cursor});
 
   @override
   String toString() {
     return 'Compile Error (${cursor.line + 1}:${cursor.column + 1}): $message';
   }
 
-  static NyAssemblerException reject(int c, Cursor cursor) {
-    return NyAssemblerException(
+  static NyvmAssemblerException reject(int c, Cursor cursor) {
+    return NyvmAssemblerException(
       message: 'Unexpected token \'${String.fromCharCode(c)}\'',
       cursor: cursor,
     );

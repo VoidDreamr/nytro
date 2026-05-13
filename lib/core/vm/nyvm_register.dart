@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:nytro/core/instructions/ny_operand.dart';
-import 'package:nytro/core/ny_type.dart';
+import 'package:nytro/core/vm/instruction/nyvm_operand.dart';
+import 'package:nytro/core/vm/nyvm_type.dart';
 
-class NyRegister {
+class NyvmRegister {
   static const int slotCount = 16;
   static const int laneCount = 16;
 
@@ -50,14 +50,14 @@ class NyRegister {
     buffer.fillRange(0, buffer.length, 0);
   }
 
-  T resolve<T>(NyFloatLike op, T? out) {
-    return resolveTyped(op, NyTypes.find<T>(), out);
+  T resolve<T>(NyvmFloatLike op, T? out) {
+    return resolveTyped(op, NyvmTypes.find<T>(), out);
   }
 
-  T resolveTyped<T>(NyFloatLike op, NyType<T> type, T? out) {
-    if (op is NyConstant && T == double) {
+  T resolveTyped<T>(NyvmFloatLike op, NyvmType<T> type, T? out) {
+    if (op is NyvmConstant && T == double) {
       return op.value as T;
-    } else if (op is NyRegisterRef) {
+    } else if (op is NyvmRegisterRef) {
       return type.unpack(buffer, index(op.slot, op.offset), out);
     }
     throw ArgumentError('Type/operand mismatch: $T, ${op.runtimeType}');

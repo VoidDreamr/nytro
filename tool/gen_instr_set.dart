@@ -1,30 +1,30 @@
 import 'dart:core';
 import 'dart:io';
-import 'package:nytro/core/instructions/ny_add_instr.dart';
-import 'package:nytro/core/instructions/ny_alloc_instr.dart';
-import 'package:nytro/core/instructions/ny_del_instr.dart';
-import 'package:nytro/core/instructions/ny_div_instr.dart';
-import 'package:nytro/core/instructions/ny_load_instr.dart';
-import 'package:nytro/core/instructions/ny_mul_instr.dart';
-import 'package:nytro/core/instructions/ny_sample_instr.dart';
-import 'package:nytro/core/instructions/ny_store_instr.dart';
-import 'package:nytro/core/instructions/ny_sub_instr.dart';
-import 'package:nytro/core/instructions/ny_write_instr.dart';
-import 'package:nytro/core/ny_type.dart';
+import 'package:nytro/core/vm/instruction/nyvm_add_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_alloc_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_del_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_div_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_load_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_mul_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_sample_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_store_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_sub_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_write_instr.dart';
+import 'package:nytro/core/vm/nyvm_type.dart';
 import 'package:path/path.dart' as p;
 
 void main() async {
   final src = _generateSource([
-    NyInstrData(type: NyWriteInstr, mnemonic: 'WRITE'),
-    NyInstrData(type: NyLoadInstr, mnemonic: 'LOAD'),
-    NyInstrData(type: NyStoreInstr, mnemonic: 'STORE'),
-    NyInstrData(type: NyAllocInstr, mnemonic: 'ALLOC'),
-    NyInstrData(type: NyDelInstr, mnemonic: 'DEL'),
-    NyInstrData(type: NyAddInstr, mnemonic: 'ADD', subTypes: NyTypes.all),
-    NyInstrData(type: NySubInstr, mnemonic: 'SUB', subTypes: NyTypes.all),
-    NyInstrData(type: NyMulInstr, mnemonic: 'MUL', subTypes: NyTypes.all),
-    NyInstrData(type: NyDivInstr, mnemonic: 'DIV', subTypes: NyTypes.all),
-    NyInstrData(type: NySampleInstr, mnemonic: 'SAMPLE_TEX2'),
+    NyvmInstrData(type: NyvmWriteInstr, mnemonic: 'WRITE'),
+    NyvmInstrData(type: NyvmLoadInstr, mnemonic: 'LOAD'),
+    NyvmInstrData(type: NyvmStoreInstr, mnemonic: 'STORE'),
+    NyvmInstrData(type: NyvmAllocInstr, mnemonic: 'ALLOC'),
+    NyvmInstrData(type: NyvmDelInstr, mnemonic: 'DEL'),
+    NyvmInstrData(type: NyvmAddInstr, mnemonic: 'ADD', subTypes: NyvmTypes.all),
+    NyvmInstrData(type: NyvmSubInstr, mnemonic: 'SUB', subTypes: NyvmTypes.all),
+    NyvmInstrData(type: NyvmMulInstr, mnemonic: 'MUL', subTypes: NyvmTypes.all),
+    NyvmInstrData(type: NyvmDivInstr, mnemonic: 'DIV', subTypes: NyvmTypes.all),
+    NyvmInstrData(type: NyvmSampleInstr, mnemonic: 'SAMPLE_TEX2'),
   ]);
 
   await File(
@@ -32,14 +32,15 @@ void main() async {
       Directory.current.path,
       'lib',
       'core',
-      'instructions',
-      'ny_instr_set.g.dart',
+      'vm',
+      'instruction',
+      'nyvm_instr_code.g.dart',
     ),
   ).writeAsString(src);
-  print('Successfully generated ny_instr_set.g.dart');
+  print('Successfully generated ny_instr_code.g.dart');
 }
 
-String _generateSource(List<NyInstrData> instrs) {
+String _generateSource(List<NyvmInstrData> instrs) {
   final out = StringBuffer();
 
   out.writeln('// GENERATED CODE - DO NOT MODIFY');
@@ -47,15 +48,15 @@ String _generateSource(List<NyInstrData> instrs) {
 
   /// Imports
   out.writeln('''
-import 'package:nytro/core/instructions/ny_instr.dart';
-import 'package:nytro/core/instructions/ny_operand.dart';
+import 'package:nytro/core/vm/instruction/nyvm_instr.dart';
+import 'package:nytro/core/vm/instruction/nyvm_operand.dart';
 import 'package:vector_math/vector_math.dart';
   ''');
   _writeImports(out, instrs);
   out.writeln();
 
   // Enum
-  out.writeln('enum NyInstrSet {');
+  out.writeln('enum NyvmInstrCode {');
 
   _writeValues(out, instrs);
   out.writeln();
@@ -64,17 +65,17 @@ import 'package:vector_math/vector_math.dart';
   out.writeln();
 
   out.writeln('''
-  static final Map<String, NyInstrSet> _mnemonics = {
-    for (final code in NyInstrSet.values) code.mnemonic: code,
+  static final Map<String, NyvmInstrCode> _mnemonics = {
+    for (final code in NyvmInstrCode.values) code.mnemonic: code,
   };
 
   final String mnemonic;
 
-  const NyInstrSet({required this.mnemonic});
+  const NyvmInstrCode({required this.mnemonic});
 
-  NyInstr create(List<NyOperand> ops) => _factories[this]!(ops);
+  NyvmInstr create(List<NyvmOperand> ops) => _factories[this]!(ops);
 
-  static NyInstrSet? fromMnemonic(String mnemonic) =>
+  static NyvmInstrCode? fromMnemonic(String mnemonic) =>
       _mnemonics[mnemonic.toUpperCase()];
 }
   ''');
@@ -82,15 +83,15 @@ import 'package:vector_math/vector_math.dart';
   return out.toString();
 }
 
-void _writeImports(StringBuffer out, List<NyInstrData> instrs) {
-  for (NyInstrData instr in instrs) {
+void _writeImports(StringBuffer out, List<NyvmInstrData> instrs) {
+  for (NyvmInstrData instr in instrs) {
     out.writeln('import \'package:${instr.import}\';');
   }
 }
 
-void _writeValues(StringBuffer out, List<NyInstrData> instrs) {
+void _writeValues(StringBuffer out, List<NyvmInstrData> instrs) {
   final entries = <String>[];
-  for (NyInstrData instr in instrs) {
+  for (NyvmInstrData instr in instrs) {
     if (instr.subTypes == null) {
       entries.add('${instr.symbol}(mnemonic: \'${instr.mnemonic}\')');
     } else {
@@ -104,19 +105,21 @@ void _writeValues(StringBuffer out, List<NyInstrData> instrs) {
   out.writeln('  ${entries.join(',\n  ')};');
 }
 
-void _writeFactories(StringBuffer out, List<NyInstrData> instrs) {
+void _writeFactories(StringBuffer out, List<NyvmInstrData> instrs) {
   out.writeln(
-    '  static final Map<NyInstrSet, NyInstr Function(List<NyOperand>)> _factories = {',
+    '  static final Map<NyvmInstrCode, NyvmInstr Function(List<NyvmOperand>)> _factories = {',
   );
 
   final entries = <String>[];
-  for (NyInstrData instr in instrs) {
+  for (NyvmInstrData instr in instrs) {
     if (instr.subTypes == null) {
-      entries.add('NyInstrSet.${instr.symbol}: ${instr.typeName}.fromOperands');
+      entries.add(
+        'NyvmInstrCode.${instr.symbol}: ${instr.typeName}.fromOperands',
+      );
     } else {
       for (int i = 0; i < instr.subTypes!.length; i++) {
         entries.add(
-          'NyInstrSet.${instr.getSymbol(i)}: ${instr.typeName}.fromOperands<${instr.subTypes![i].type}>',
+          'NyvmInstrCode.${instr.getSymbol(i)}: ${instr.typeName}.fromOperands<${instr.subTypes![i].type}>',
         );
       }
     }
@@ -126,10 +129,10 @@ void _writeFactories(StringBuffer out, List<NyInstrData> instrs) {
   out.writeln('  };');
 }
 
-class NyInstrData {
+class NyvmInstrData {
   final Type type;
   final String mnemonic;
-  final List<NyType>? subTypes;
+  final List<NyvmType>? subTypes;
   final String? importPath;
 
   String get symbol => getSymbol();
@@ -137,9 +140,9 @@ class NyInstrData {
   String get filename => typeName
       .replaceAllMapped(RegExp(r'([a-z0-9])([A-Z])'), (m) => '${m[1]}_${m[2]}')
       .toLowerCase();
-  String get import => importPath ?? "nytro/core/instructions/$filename.dart";
+  String get import => importPath ?? "nytro/core/vm/instruction/$filename.dart";
 
-  NyInstrData({
+  NyvmInstrData({
     required this.type,
     required this.mnemonic,
     this.importPath,

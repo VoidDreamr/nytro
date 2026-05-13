@@ -1,13 +1,13 @@
-import 'package:nytro/core/ny_program.dart';
-import 'package:nytro/core/ny_type.dart';
+import 'package:nytro/core/vm/nyvm_program.dart';
+import 'package:nytro/core/vm/nyvm_type.dart';
 
-class NyBinding<T> {
-  final NyType<T> type;
-  final NyProgram program;
+class NyvmBinding<T> {
+  final NyvmType<T> type;
+  final NyvmProgram program;
   final int index;
   final int offset;
 
-  NyBinding({
+  NyvmBinding({
     required this.type,
     required this.program,
     required this.index,

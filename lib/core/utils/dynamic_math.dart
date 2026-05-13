@@ -1,6 +1,6 @@
 import 'package:vector_math/vector_math.dart';
 
-abstract final class NyMath {
+abstract final class DynamicMath {
   static T add<T>(T a, T b) {
     return ((a as dynamic) + (b as dynamic)) as T;
   }
