@@ -9,9 +9,6 @@
 # r4 = offset vec2
 # r5 = divisor vec4
 
-# accumulator = vec4(0)
-WRITE 0f 0f 0f 0f r0
-
 # load uv
 LOAD m1 2 r1
 
