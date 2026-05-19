@@ -1,10 +1,17 @@
 import 'dart:io';
 import 'package:image/image.dart';
+import 'package:nytro/core/compiler/ny_lexer.dart';
 import 'package:nytro/core/vm/nyvm_assembler.dart';
 import 'package:nytro/nytro_image/ny_texture_image.dart';
 import 'package:vector_math/vector_math.dart';
 
 void main(List<String> arguments) async {
+  final src = await File('shader.ny').readAsString();
+
+  print(NyLexer.tokenize(src));
+}
+
+Future<void> runShaderAssembly() async {
   final src = await File('shader.nyasm').readAsString();
   final program = NyvmAssembler.parse(src);
   final uvIn = program.bind<Vector2>(1);
